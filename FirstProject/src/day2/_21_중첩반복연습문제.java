@@ -10,7 +10,7 @@ public class _21_중첩반복연습문제 {
 		for (int i = 0; i < 10; i++) {
 			for (int j = 9; j > 1; j--) {
 				if (i == 0) {
-					System.out.print(j + "단\t");
+					System.out.print(j + "단\t\t");
 				} else {
 					System.out.print(j + "x" + i + "=" + j * i + "\t");
 				}

@@ -1,4 +1,4 @@
-package dya3;
+package day3;
 
 public class _3_반복문복습 {
 

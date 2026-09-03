@@ -1,4 +1,4 @@
-package dya3;
+package day3;
 
 import java.util.Random;
 import java.util.Scanner;

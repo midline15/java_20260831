@@ -1,4 +1,4 @@
-package dya3;
+package day3;
 
 public class _12_배열 {
 

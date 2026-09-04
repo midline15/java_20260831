@@ -2,7 +2,7 @@ package day4;
 
 import java.util.Arrays;
 
-public class _12_선택정렬 {
+public class _13_선택정렬 {
 
 	public static void main(String[] args) {
 

@@ -14,7 +14,7 @@ public class _5_성적관리프로그램 {
 
 		System.out.println("======= 성적관리 프로그램 ======");
 		while (true) {
-			System.out.print("[ (1) 성적등록  (2) 성적확인  (3) 성적순위  (그 외) 종료 ] : ");
+			System.out.print("[ (1) 성적등록  (2) 성적확인  (3) 성적순위  (4) 성적수정  (5) 삭제  (그 외) 종료 ] : ");
 			int menu = s.nextInt();
 			if (menu == 1) {
 				// 1. 학번은 무조건 4글자, 4글자 벗어나면 다시 입력
@@ -34,7 +34,7 @@ public class _5_성적관리프로그램 {
 						break;
 					}
 				}
-				
+
 				System.out.print("이름 : ");
 				String name = s.next();
 				student.put("name", name);
@@ -44,13 +44,13 @@ public class _5_성적관리프로그램 {
 
 				int dbScore = MyFunction.numberCheck("db점수 : ", 0, 35);
 				student.put("db", dbScore);
-				
+
 				int htmlScore = MyFunction.numberCheck("html점수 : ", 0, 25);
 				student.put("html", htmlScore);
 
 				list.add(student);
-				stuNoList.add((String)student.get("stuNo"));
-				
+				stuNoList.add((String) student.get("stuNo"));
+
 				System.out.println(list);
 				System.out.println(stuNoList);
 
@@ -61,54 +61,90 @@ public class _5_성적관리프로그램 {
 				System.out.println("학번 : ");
 				String stuNo = s.next();
 				int index = stuNoList.indexOf(stuNo);
-				if(index != -1) {
+				if (index != -1) {
 					HashMap<String, Object> student = list.get(index);
-					int total = (int)student.get("java")+(int)student.get("db")+(int)student.get("html");
-					
-					System.out.println("총점 : "+total);
-				}
-				else {
+					int total = (int) student.get("java") + (int) student.get("db") + (int) student.get("html");
+
+					System.out.println("총점 : " + total);
+				} else {
 					System.out.println("학번을 확인해주세요");
 				}
-				
-			}else if (menu == 3) {
+
+			} else if (menu == 3) {
 				// 메뉴에 들어오면 학생들 전체 등수 출력
 				// 5명 있으면
 				// 1등 : 000 , 00점(총점)
 				// 2등 : 000, 00점(총점)
-				//  ...
+				// ...
 				// 5등 : 000, 00점(총점)
 				int scoreArr[] = new int[list.size()];
 				String stuNoArr[] = new String[list.size()];
-				
-				for(int i =0; i < list.size(); i++) {
+
+				for (int i = 0; i < list.size(); i++) {
 					HashMap<String, Object> student = list.get(i);
-					scoreArr[i] = (int)student.get("java")+(int)student.get("db")+(int)student.get("html");
+					scoreArr[i] = (int) student.get("java") + (int) student.get("db") + (int) student.get("html");
 					stuNoArr[i] = student.get("stuNo").toString();
 
 				}
-				
-				
-				for(int i = 0 ; i < scoreArr.length; i++) {
+
+				for (int i = 0; i < scoreArr.length; i++) {
 					int maxIndex = i;
-					for(int j = i+1; j < scoreArr.length; j++) {
-						if(scoreArr[maxIndex]<scoreArr[j]) {
+					for (int j = i + 1; j < scoreArr.length; j++) {
+						if (scoreArr[maxIndex] < scoreArr[j]) {
 							int tmp = scoreArr[maxIndex];
 							scoreArr[maxIndex] = scoreArr[j];
 							scoreArr[j] = tmp;
-							
+
 							String temp = stuNoArr[maxIndex];
 							stuNoArr[maxIndex] = stuNoArr[j];
 							stuNoArr[j] = temp;
 						}
 					}
 				}
-				
-				for(int i = 0; i <scoreArr.length; i++) {
-					System.out.println((i+1)+"등 : " + stuNoArr[i] + ", "+ scoreArr[i]+"점");
+
+				for (int i = 0; i < scoreArr.length; i++) {
+					System.out.println((i + 1) + "등 : " + stuNoArr[i] + ", " + scoreArr[i] + "점");
 				}
+			} else if (menu == 4) {
+				// 학번을 입력받아서 해당 학생이 없으면 "학번을 확인해주세요" 출력후 메뉴로이동
+				// 있는 학번이면 '자바', 'db', 'html' 점수를 다시 입력받아 해당 점수로 저장
+				// 자바 db html 의 점수 범위는 1번 메뉴와 동일
+				System.out.println("학번 : ");
+				String stuNo = s.next();
+				int index = stuNoList.indexOf(stuNo);
+				if (index != -1) {
+					HashMap<String, Object> student = list.get(index);
+					int javaScore = MyFunction.numberCheck("자바점수 : ", 0, 40);
+					student.put("java", javaScore);
+
+					int dbScore = MyFunction.numberCheck("db점수 : ", 0, 35);
+					student.put("db", dbScore);
+
+					int htmlScore = MyFunction.numberCheck("html점수 : ", 0, 25);
+					student.put("html", htmlScore);
+				} else { System.out.println("학번을 확인해주세요");}
+			} else if (menu == 5) {
+				// 학번을 입력받아서 해당 학생이 없으면 "학번을 확인해주세요" 출력후 메뉴로이동
+				// 있는 학번인 경우 '정말 삭제?' 물어보고
+				// y(대소문자) 삭제 그 외 문자입력 취소되었습니다 출력 후 메뉴
+				System.out.println("학번 : ");
+				String stuNo = s.next();
+				int index = stuNoList.indexOf(stuNo);
+				if (index != -1) {
+					System.out.print("정말 삭제?(y or n)");
+					String result = s.next().toUpperCase();
+					if(result.equals("Y")) {
+						list.remove(index);
+						stuNoList.remove(index);
+						System.out.println("삭제되었습니다.");
+					}else {
+						System.out.println("취소되었습니다.");
+					}
+				}else {
+					System.out.println("학번을 확인해주세요");
+				}
+			} else {
 			}
-			else {}
 		}
 	}
 

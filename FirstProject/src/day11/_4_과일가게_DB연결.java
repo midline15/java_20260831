@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Scanner;
 
+import day10.MyFunction;
+
 public class _4_과일가게_DB연결 {
 
 	static Scanner s = new Scanner(System.in);
@@ -14,11 +16,21 @@ public class _4_과일가게_DB연결 {
 		while (true) {
 			System.out.print(msg);
 			int num = s.nextInt();
-			if (num <= 0) {
-				System.out.println("0보다 큰수를 입력하세요");
-				continue;
+			if (num > 0) {
+				return num;
 			}
-			return num;
+			System.out.println("0보다 큰수를 입력하세요");
+		}
+	}
+	
+	static int checkNum(String msg, int min, int max) {
+		while(true) {
+			System.out.print(msg);
+			int input = s.nextInt();
+			if(input>=min && input<=max) {
+				return input;
+			}
+			System.out.println("숫자의 범위는 "+min+" ~ "+max+" 입니다.");
 		}
 	}
 
@@ -88,6 +100,35 @@ public class _4_과일가게_DB연결 {
 
 	static void sellFruit() {
 		System.out.println("=== 과일 판매 ===");
+		// 1. 판매할 과일 이름 입력하기
+		//		해당 과일 db에 없으면 없다는 문구 출력후 메뉴로 이동
+		// 2. 과일이 있을 경우 현재 개수 알려주고 구매할 개수 입력받기
+		// 3. 구매개수는 1이상, 현재개수보다 작은 숫자 입력 받기
+		//		해당 범위 벗어날 경우 안내문구 후 다시 입력하도록 유도
+		// 4. 정상 범위 입력했을 경우 기존 개수에서 차감 후 메뉴로 이동
+		
+		try {
+			System.out.print("과일 이름 : ");
+			String fruitName = "'" + s.next() + "'";
+			String sql = "select cnt from fruit where fruit_name = " + fruitName;
+			ResultSet rs = stmt.executeQuery(sql);
+			if (rs.next()) {
+				System.out.print(fruitName + "의 수량은 " + rs.getInt("cnt") + "개 입니다.\n");
+				int cnt = checkNum("구매할 수량 : ", 1, rs.getInt("cnt"));
+				sql = "update fruit set cnt = cnt - " + cnt + " where fruit_name = " + fruitName;
+				int flag = stmt.executeUpdate(sql);
+				if (flag > 0) {
+					System.out.println("판매되었습니다.");
+				} else {
+					System.out.println("오류가 발생했습니다.");
+				}
+			} else {
+				System.out.println("해당 과일은 존재하지 않습니다.");
+			}
+
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
 	}
 
 	static void checkFruit() {
@@ -143,7 +184,7 @@ public class _4_과일가게_DB연결 {
 		try {
 
 			while (true) {
-				System.out.print("[  (1) 과일 추가  (2) 가격 수정  (3) 판매  (4) 과일 확인  (5) 삭제  (그 외) 종료  ] : ");
+				System.out.print("[  (1) 과일 추가  (2) 가격 수정  (3) 판매  (4) 과일 확인  (5) 삭제  (0) 종료  ] : ");
 				int menu = s.nextInt();
 
 				switch (menu) {
@@ -166,6 +207,7 @@ public class _4_과일가게_DB연결 {
 					System.out.println("종료되었습니다.");
 					break;
 				}
+				if(menu == 0) break;
 			}
 
 		} catch (Exception e) {
